@@ -1,12 +1,12 @@
 package ir.jimsa.datagame.shared;
 
+import ir.jimsa.datagame.exception.CarServiceException;
 import ir.jimsa.datagame.shared.dto.CarDto;
+import ir.jimsa.datagame.ui.model.response.ErrorMessages;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.annotation.processing.FilerException;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,7 +25,7 @@ public class Utils {
         try {
             return file.getContentType().equals("text/csv");
         } catch (Exception e) {
-            return false;
+            throw new CarServiceException(ErrorMessages.FILE_BAD_FORMAT.getErrorMessage());
         }
     }
 
@@ -59,7 +59,7 @@ public class Utils {
 
             return cars;
         } catch (Exception e) {
-            throw new FilerException(e.getMessage());
+            throw new CarServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
         }
     }
 

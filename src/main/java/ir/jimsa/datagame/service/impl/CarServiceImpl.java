@@ -1,10 +1,12 @@
 package ir.jimsa.datagame.service.impl;
 
+import ir.jimsa.datagame.exception.CarServiceException;
 import ir.jimsa.datagame.io.CarRepository;
 import ir.jimsa.datagame.io.entity.CarEntity;
 import ir.jimsa.datagame.service.CarService;
 import ir.jimsa.datagame.shared.Utils;
 import ir.jimsa.datagame.shared.dto.CarDto;
+import ir.jimsa.datagame.ui.model.response.ErrorMessages;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +48,7 @@ public class CarServiceImpl implements CarService {
             return savedCars.size();
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new CarServiceException(ErrorMessages.RECORD_ALREADY_EXISTS.getErrorMessage());
         }
 
 
@@ -68,7 +70,7 @@ public class CarServiceImpl implements CarService {
 
         CarEntity carEntity = carRepository.findCarEntityByCarId(carId);
         if (carEntity == null) {
-            throw new RuntimeException();
+            throw new CarServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
         BeanUtils.copyProperties(carEntity, returnValue);
         return returnValue;
@@ -79,6 +81,8 @@ public class CarServiceImpl implements CarService {
         List<CarEntity> carEntities = carRepository.findAll();
         if (carEntities.size() != 0) {
             carRepository.deleteAll();
+        } else {
+            throw new CarServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
     }
 
