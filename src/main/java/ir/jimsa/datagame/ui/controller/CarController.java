@@ -3,12 +3,15 @@ package ir.jimsa.datagame.ui.controller;
 import ir.jimsa.datagame.service.CarService;
 import ir.jimsa.datagame.shared.Utils;
 import ir.jimsa.datagame.shared.dto.CarDto;
+import ir.jimsa.datagame.ui.model.request.RequestOperationName;
 import ir.jimsa.datagame.ui.model.request.RequestOperationStatus;
 import ir.jimsa.datagame.ui.model.response.Car;
+import ir.jimsa.datagame.ui.model.response.OperationStatusModel;
 import ir.jimsa.datagame.ui.model.response.SaveResponseModel;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -59,6 +62,15 @@ public class CarController {
         Car returnValue = new Car();
         CarDto carDto = carService.getCarByCarId(carId);
         BeanUtils.copyProperties(carDto, returnValue);
+        return returnValue;
+    }
+
+    @DeleteMapping
+    public OperationStatusModel deleteUser() {
+        OperationStatusModel returnValue = new OperationStatusModel();
+        returnValue.setOperationName(RequestOperationName.DELETE.name());
+        carService.deleteAllUsers();
+        returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
         return returnValue;
     }
 }

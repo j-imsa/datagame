@@ -74,4 +74,12 @@ public class CarServiceImpl implements CarService {
         return returnValue;
     }
 
+    @Override
+    public void deleteAllUsers() {
+        List<CarEntity> carEntities = carRepository.findAll();
+        if (carEntities.size() != 0) {
+            carRepository.deleteAll();
+        }
+    }
+
 }
