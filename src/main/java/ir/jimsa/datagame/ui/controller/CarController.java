@@ -53,7 +53,12 @@ public class CarController {
 
         ModelMapper modelMapper = new ModelMapper();
         return carDtos.stream()
-                .map(carDto ->modelMapper.map(carDto, Car.class))
+                .map(carDto -> {
+                    Car car = modelMapper.map(carDto, Car.class);
+                    car.setToDate(utils.convertData(carDto.getToDate()));
+                    car.setFromDate(utils.convertData(carDto.getFromDate()));
+                    return car;
+                })
                 .toList();
     }
 

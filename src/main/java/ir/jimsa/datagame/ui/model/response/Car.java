@@ -18,7 +18,7 @@ public class Car {
     private String code;
     private String displayValue;
     private String longDescription;
-    private Date fromDate;
-    private Date toDate;
+    private String fromDate;
+    private String toDate;
     private String sortingPriority;
 }

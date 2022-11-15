@@ -35,7 +35,7 @@ public class Utils {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());
 
-            List<CarDto> cars  = csvParser.getRecords().stream()
+            List<CarDto> cars = csvParser.getRecords().stream()
                     .map(item -> {
                         CarDto carDto = new CarDto();
                         carDto.setSource(item.get("source"));
@@ -45,9 +45,12 @@ public class Utils {
                         carDto.setLongDescription(item.get("longDescription"));
                         try {
                             carDto.setFromDate(convertData(item.get("fromDate")));
-                            carDto.setToDate(convertData(item.get("toDate")));
                         } catch (ParseException e) {
                             carDto.setFromDate(null);
+                        }
+                        try {
+                            carDto.setToDate(convertData(item.get("toDate")));
+                        } catch (ParseException e) {
                             carDto.setToDate(null);
                         }
                         carDto.setSortingPriority(item.get("sortingPriority"));
@@ -55,22 +58,27 @@ public class Utils {
                     }).toList();
 
             return cars;
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new FilerException(e.getMessage());
         }
     }
 
     public Date convertData(String stringFormat) throws ParseException {
         try {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
-            return  simpleDateFormat.parse(stringFormat);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
+            return simpleDateFormat.parse(stringFormat);
         } catch (ParseException e) {
             throw new ParseException(e.getMessage(), e.getErrorOffset());
         }
     }
 
     public String convertData(Date date) {
-        return date.getMonth() + "/" + date.getDay() + "/" + date.getYear();
+        if (date != null) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
+            return simpleDateFormat.format(date);
+        } else {
+            return "";
+        }
     }
 
     public String generateCarId(int length) {
