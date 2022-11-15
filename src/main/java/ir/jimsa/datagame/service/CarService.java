@@ -1,7 +1,12 @@
 package ir.jimsa.datagame.service;
 
+import ir.jimsa.datagame.shared.dto.CarDto;
 import org.springframework.web.multipart.MultipartFile;
 
-public interface DataService {
+import java.util.List;
+
+public interface CarService {
     int saveFile(MultipartFile file);
+
+    List<CarDto> getAllCars();
 }

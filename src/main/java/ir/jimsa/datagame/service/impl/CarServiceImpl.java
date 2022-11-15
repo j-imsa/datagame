@@ -2,8 +2,9 @@ package ir.jimsa.datagame.service.impl;
 
 import ir.jimsa.datagame.io.CarRepository;
 import ir.jimsa.datagame.io.entity.CarEntity;
-import ir.jimsa.datagame.service.DataService;
+import ir.jimsa.datagame.service.CarService;
 import ir.jimsa.datagame.shared.Utils;
+import ir.jimsa.datagame.shared.dto.CarDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,14 +14,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class DataServiceImpl implements DataService {
+public class CarServiceImpl implements CarService {
 
 
     final Utils utils;
     final CarRepository carRepository;
 
     @Autowired
-    public DataServiceImpl(Utils utils, CarRepository carRepository) {
+    public CarServiceImpl(Utils utils, CarRepository carRepository) {
         this.utils = utils;
         this.carRepository = carRepository;
     }
@@ -48,6 +49,16 @@ public class DataServiceImpl implements DataService {
         }
 
 
+    }
+
+    @Override
+    public List<CarDto> getAllCars() {
+        List<CarEntity> carEntities = carRepository.findAll();
+        ModelMapper modelMapper = new ModelMapper();
+        return carEntities
+                .stream()
+                .map(carEntity -> modelMapper.map(carEntity, CarDto.class))
+                .toList();
     }
 
 }
