@@ -7,6 +7,7 @@ import ir.jimsa.datagame.ui.model.request.RequestOperationStatus;
 import ir.jimsa.datagame.ui.model.response.Car;
 import ir.jimsa.datagame.ui.model.response.SaveResponseModel;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,5 +52,13 @@ public class CarController {
         return carDtos.stream()
                 .map(carDto ->modelMapper.map(carDto, Car.class))
                 .toList();
+    }
+
+    @GetMapping(path = "/{carId}")
+    public Car getCar(@PathVariable String carId) {
+        Car returnValue = new Car();
+        CarDto carDto = carService.getCarByCarId(carId);
+        BeanUtils.copyProperties(carDto, returnValue);
+        return returnValue;
     }
 }

@@ -9,4 +9,6 @@ public interface CarService {
     int saveFile(MultipartFile file);
 
     List<CarDto> getAllCars();
+
+    CarDto getCarByCarId(String carId);
 }

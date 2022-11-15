@@ -6,6 +6,7 @@ import ir.jimsa.datagame.service.CarService;
 import ir.jimsa.datagame.shared.Utils;
 import ir.jimsa.datagame.shared.dto.CarDto;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,6 +60,18 @@ public class CarServiceImpl implements CarService {
                 .stream()
                 .map(carEntity -> modelMapper.map(carEntity, CarDto.class))
                 .toList();
+    }
+
+    @Override
+    public CarDto getCarByCarId(String carId) {
+        CarDto returnValue = new CarDto();
+
+        CarEntity carEntity = carRepository.findCarEntityByCarId(carId);
+        if (carEntity == null) {
+            throw new RuntimeException();
+        }
+        BeanUtils.copyProperties(carEntity, returnValue);
+        return returnValue;
     }
 
 }
